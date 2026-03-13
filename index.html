@@ -1,345 +1,233 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bible Encourager</title>
-
 <style>
-
 body{
-font-family:Arial, Helvetica, sans-serif;
-background:#f4f6f8;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#eef2ff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  margin:0;
 }
-
 .container{
-width:100%;
-max-width:420px;
+  width:100%;
+  max-width:450px;
 }
-
 .card{
-background:white;
-padding:30px;
-border-radius:10px;
-box-shadow:0 10px 25px rgba(0,0,0,0.08);
+  background:white;
+  padding:30px;
+  border-radius:15px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
 }
-
-h1{
-text-align:center;
-color:#4f46e5;
-}
-
-.tabs{
-display:flex;
-margin-bottom:20px;
-border-bottom:2px solid #eee;
-}
-
+.card:hover{transform: translateY(-3px);}
+h1{text-align:center; color:#4f46e5;}
+.tabs{display:flex; margin-bottom:20px; border-bottom:2px solid #ddd;}
 .tab{
-flex:1;
-text-align:center;
-padding:10px;
-cursor:pointer;
+  flex:1; text-align:center; padding:10px; cursor:pointer; transition: all 0.2s;
 }
-
 .tab.active{
-border-bottom:3px solid #4f46e5;
-color:#4f46e5;
-font-weight:bold;
+  border-bottom:3px solid #4f46e5; color:#4f46e5; font-weight:bold;
 }
-
-form{
-display:flex;
-flex-direction:column;
-gap:12px;
-}
-
+form{display:flex; flex-direction:column; gap:12px;}
 input{
-padding:10px;
-border:1px solid #ccc;
-border-radius:6px;
+  padding:12px; border:1px solid #ccc; border-radius:8px; font-size:1rem;
 }
-
+input:focus{outline:none; border-color:#4f46e5; box-shadow:0 0 0 3px rgba(79,70,229,0.15);}
 button{
-padding:12px;
-background:#4f46e5;
-color:white;
-border:none;
-border-radius:6px;
-font-weight:bold;
-cursor:pointer;
+  padding:14px; background:#4f46e5; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:1rem;
+  transition: background 0.2s, transform 0.2s;
 }
-
-button:hover{
-background:#4338ca;
-}
-
-.message{
-text-align:center;
-margin-top:10px;
-}
-
+button:hover{background:#4338ca; transform: translateY(-1px);}
+.message{text-align:center; margin-top:12px;}
 .success{color:green;}
 .error{color:red;}
-
-#dashboard{
-display:none;
+#dashboard{display:none;}
+.verse-card{
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  border-radius:15px;
+  padding:20px;
+  text-align:center;
+  margin:20px 0;
+  font-style:italic;
+  font-size:1.2rem;
+  transition: opacity 1s ease;
 }
-
-.verse{
-font-size:18px;
-font-style:italic;
-text-align:center;
-margin:20px 0;
-}
-
 .profile{
-background:#f1f5f9;
-padding:15px;
-border-radius:8px;
+  background:#f1f5f9;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.05);
 }
-
 .logout{
-margin-top:15px;
-background:#ef4444;
+  margin-top:15px; background:#ef4444;
 }
-
+.logout:hover{background:#b91c1c;}
 </style>
-
 </head>
-
 <body>
-
 <div class="container">
 
+<!-- Login/Register Card -->
 <div id="auth" class="card">
-
 <h1>Bible Encourager</h1>
-
 <div class="tabs">
-<div class="tab active" onclick="showForm('login')">Login</div>
-<div class="tab" onclick="showForm('register')">Register</div>
+  <div class="tab active" onclick="showForm('login')">Login</div>
+  <div class="tab" onclick="showForm('register')">Register</div>
 </div>
 
 <form id="loginForm">
-
-<input type="email" id="loginEmail" placeholder="Email" required>
-
-<input type="password" id="loginPass" placeholder="Password" required>
-
-<button type="submit">Login</button>
-
+  <input type="email" id="loginEmail" placeholder="Email" required>
+  <input type="password" id="loginPass" placeholder="Password" required>
+  <button type="submit">Login</button>
 </form>
 
-<form id="registerForm" style="display:none">
-
-<input type="text" id="regName" placeholder="Full Name" required>
-
-<input type="email" id="regEmail" placeholder="Email" required>
-
-<input type="password" id="regPass" placeholder="Password" required>
-
-<button type="submit">Create Account</button>
-
+<form id="registerForm" style="display:none;">
+  <input type="text" id="regName" placeholder="Full Name" required>
+  <input type="email" id="regEmail" placeholder="Email" required>
+  <input type="password" id="regPass" placeholder="Password" required>
+  <button type="submit">Create Account</button>
 </form>
 
 <div id="msg" class="message"></div>
-
 </div>
 
+<!-- Dashboard Card -->
 <div id="dashboard" class="card">
-
 <h1 id="greeting">Welcome</h1>
 
-<div class="verse" id="dailyVerse"></div>
+<div class="verse-card" id="dailyVerse">Loading daily encouragement...</div>
 
 <div class="profile">
-
-<b>Name:</b> <span id="userName"></span><br><br> <b>Email:</b> <span id="userEmail"></span>
-
+<b>Name:</b> <span id="userName"></span><br><br>
+<b>Email:</b> <span id="userEmail"></span>
 </div>
 
 <button class="logout" onclick="logout()">Logout</button>
-
 </div>
 
 </div>
 
 <script>
+const SCRIPT_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycbz9Ama5D2gqTYtA1ZnrVuVwENIkjO-6A9Ri9TjHwqMEIN7rt6zTDb_CsmEawfYmunkeBA/exec";
-
+// Multiple verses
 const verses=[
 "The Lord is my shepherd; I shall not want. - Psalm 23:1",
 "Be strong and courageous. - Joshua 1:9",
 "For I know the plans I have for you. - Jeremiah 29:11",
 "Come to me, all who are weary. - Matthew 11:28",
-"Peace I leave with you. - John 14:27"
+"Peace I leave with you. - John 14:27",
+"The joy of the Lord is your strength. - Nehemiah 8:10",
+"Cast all your anxiety on him because he cares for you. - 1 Peter 5:7"
 ];
 
+// Show Login/Register Form
 function showForm(type){
-
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-
-if(type==="login"){
-document.querySelectorAll(".tab")[0].classList.add("active");
-document.getElementById("loginForm").style.display="flex";
-document.getElementById("registerForm").style.display="none";
-}else{
-document.querySelectorAll(".tab")[1].classList.add("active");
-document.getElementById("loginForm").style.display="none";
-document.getElementById("registerForm").style.display="flex";
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".tab")[type==="login"?0:1].classList.add("active");
+  document.getElementById("loginForm").style.display = type==="login"?"flex":"none";
+  document.getElementById("registerForm").style.display = type==="register"?"flex":"none";
+  document.getElementById("msg").innerText="";
 }
 
-}
-
+// Show message
 function showMessage(text,success=false){
-
-const msg=document.getElementById("msg");
-
-msg.innerText=text;
-
-msg.className="message "+(success?"success":"error");
-
+  const msg=document.getElementById("msg");
+  msg.innerText=text;
+  msg.className="message "+(success?"success":"error");
 }
 
+// Random verse with fade effect
 function randomVerse(){
-
-const verse=verses[Math.floor(Math.random()*verses.length)];
-
-document.getElementById("dailyVerse").innerText=verse;
-
+  const verseBox = document.getElementById("dailyVerse");
+  verseBox.style.opacity=0;
+  setTimeout(()=>{
+    verseBox.innerText = verses[Math.floor(Math.random()*verses.length)];
+    verseBox.style.opacity=1;
+  },500);
 }
 
+// Greeting
 function greeting(){
-
-const h=new Date().getHours();
-
-let g="Welcome";
-
-if(h<12)g="Good Morning";
-else if(h<18)g="Good Afternoon";
-else g="Good Evening";
-
-document.getElementById("greeting").innerText=g;
-
+  const h=new Date().getHours();
+  let g="Welcome";
+  if(h<12) g="Good Morning";
+  else if(h<18) g="Good Afternoon";
+  else g="Good Evening";
+  const user = JSON.parse(localStorage.getItem("bibleUser"));
+  document.getElementById("greeting").innerText = g + (user?`, ${user.name}!`:'!');
 }
 
+// Load Dashboard
 function loadDashboard(){
-
-const user=JSON.parse(localStorage.getItem("bibleUser"));
-
-if(!user)return;
-
-document.getElementById("auth").style.display="none";
-document.getElementById("dashboard").style.display="block";
-
-document.getElementById("userName").innerText=user.name;
-document.getElementById("userEmail").innerText=user.email;
-
-greeting();
-randomVerse();
-
+  const user=JSON.parse(localStorage.getItem("bibleUser"));
+  if(!user)return;
+  document.getElementById("auth").style.display="none";
+  document.getElementById("dashboard").style.display="block";
+  document.getElementById("userName").innerText=user.name;
+  document.getElementById("userEmail").innerText=user.email;
+  greeting();
+  randomVerse();
+  setInterval(randomVerse,10000); // Change verse every 10 seconds
 }
 
+// Logout
 function logout(){
-
-localStorage.removeItem("bibleUser");
-
-document.getElementById("dashboard").style.display="none";
-document.getElementById("auth").style.display="block";
-
+  localStorage.removeItem("bibleUser");
+  document.getElementById("dashboard").style.display="none";
+  document.getElementById("auth").style.display="block";
 }
 
+// Login
 document.getElementById("loginForm").addEventListener("submit",async e=>{
-
-e.preventDefault();
-
-const email=document.getElementById("loginEmail").value;
-const password=document.getElementById("loginPass").value;
-
-const data=new FormData();
-
-data.append("action","login");
-data.append("email",email);
-data.append("password",password);
-
-try{
-
-const res=await fetch(SCRIPT_URL,{method:"POST",body:data});
-
-const result=await res.json();
-
-if(result.success){
-
-localStorage.setItem("bibleUser",JSON.stringify({
-name:result.name,
-email:result.email
-}));
-
-loadDashboard();
-
-}else{
-
-showMessage(result.message);
-
-}
-
-}catch{
-
-showMessage("Network error");
-
-}
-
+  e.preventDefault();
+  const email=document.getElementById("loginEmail").value;
+  const password=document.getElementById("loginPass").value;
+  const data=new FormData();
+  data.append("action","login");
+  data.append("email",email);
+  data.append("password",password);
+  try{
+    const res=await fetch(SCRIPT_URL,{method:"POST",body:data});
+    const result=await res.json();
+    if(result.success){
+      localStorage.setItem("bibleUser",JSON.stringify({name:result.name,email:result.email}));
+      loadDashboard();
+    }else showMessage(result.message);
+  }catch{showMessage("Network error");}
 });
 
+// Register
 document.getElementById("registerForm").addEventListener("submit",async e=>{
-
-e.preventDefault();
-
-const name=document.getElementById("regName").value;
-const email=document.getElementById("regEmail").value;
-const password=document.getElementById("regPass").value;
-
-const data=new FormData();
-
-data.append("action","register");
-data.append("name",name);
-data.append("email",email);
-data.append("password",password);
-
-try{
-
-const res=await fetch(SCRIPT_URL,{method:"POST",body:data});
-
-const result=await res.json();
-
-showMessage(result.message,result.success);
-
-}catch{
-
-showMessage("Network error");
-
-}
-
+  e.preventDefault();
+  const name=document.getElementById("regName").value;
+  const email=document.getElementById("regEmail").value;
+  const password=document.getElementById("regPass").value;
+  const data=new FormData();
+  data.append("action","register");
+  data.append("name",name);
+  data.append("email",email);
+  data.append("password",password);
+  try{
+    const res=await fetch(SCRIPT_URL,{method:"POST",body:data});
+    const result=await res.json();
+    showMessage(result.message,result.success);
+    if(result.success){
+      document.getElementById("loginEmail").value=email;
+      document.getElementById("loginPass").value=password;
+      showForm('login');
+    }
+  }catch{showMessage("Network error");}
 });
 
-window.onload=()=>{
-
-if(localStorage.getItem("bibleUser")){
-loadDashboard();
-}
-
-};
-
+// Auto-login if user exists
+window.onload=()=>{if(localStorage.getItem("bibleUser")) loadDashboard();};
 </script>
-
 </body>
 </html>
-
