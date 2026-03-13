@@ -35,8 +35,6 @@ body{
   margin-bottom:20px;
   position:relative;
 }
-
-/* Semi-transparent overlay for better text readability */
 .hero::before{
   content:"";
   position:absolute;
@@ -46,14 +44,11 @@ body{
   border-radius:15px;
   z-index:0;
 }
-
-/* Text on top of overlay */
 .hero h1, .hero p, .hero span{
   position:relative;
   z-index:1;
   text-shadow:1px 1px 3px rgba(0,0,0,0.6);
 }
-
 .hero h1{ font-size:2rem; margin-bottom:10px; }
 .hero p{ font-size:1rem; line-height:1.5; margin-bottom:10px; }
 .hero span{ font-size:0.9rem; opacity:0.8; }
@@ -61,7 +56,7 @@ body{
 /* Container for login/register and dashboard */
 .container{
   width:100%;
-  max-width:450px;
+  max-width:500px;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -108,12 +103,6 @@ button:hover{background:#4338ca; transform: translateY(-1px);}
 }
 .logout{margin-top:15px; background:#ef4444;}
 .logout:hover{background:#b91c1c;}
-
-/* Video Section (below login/register) */
-.video-container{
-  width:100%;
-  max-width:500px;
-}
 video.intro-video{
   width:100%;
   border-radius:15px;
@@ -160,7 +149,7 @@ video.intro-video{
       <div id="msg" class="message"></div>
     </div>
 
-    <!-- Dashboard Card -->
+    <!-- Dashboard Card (with video inside after login) -->
     <div id="dashboard" class="card">
       <h1 id="greeting">Welcome</h1>
       <div class="verse-card" id="dailyVerse">Loading daily encouragement...</div>
@@ -168,16 +157,16 @@ video.intro-video{
         <b>Name:</b> <span id="userName"></span><br><br>
         <b>Email:</b> <span id="userEmail"></span>
       </div>
-      <button class="logout" onclick="logout()">Logout</button>
-    </div>
 
-    <!-- Video Section (after login/register) -->
-    <div class="video-container">
+      <!-- Video only visible after login -->
       <video class="intro-video" autoplay loop playsinline>
         <source src="assets/intro.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
+
+      <button class="logout" onclick="logout()">Logout</button>
     </div>
+
   </div>
 
 </div>
@@ -288,6 +277,5 @@ document.getElementById("registerForm").addEventListener("submit",async e=>{
 
 window.onload=()=>{if(localStorage.getItem("bibleUser")) loadDashboard();};
 </script>
-
 </body>
 </html>
