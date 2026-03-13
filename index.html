@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bible Encourager</title>
+
+<style>
+
+body{
+font-family:Arial, Helvetica, sans-serif;
+background:#f4f6f8;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+margin:0;
+}
+
+.container{
+width:100%;
+max-width:420px;
+}
+
+.card{
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+h1{
+text-align:center;
+color:#4f46e5;
+}
+
+.tabs{
+display:flex;
+margin-bottom:20px;
+border-bottom:2px solid #eee;
+}
+
+.tab{
+flex:1;
+text-align:center;
+padding:10px;
+cursor:pointer;
+}
+
+.tab.active{
+border-bottom:3px solid #4f46e5;
+color:#4f46e5;
+font-weight:bold;
+}
+
+form{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+input{
+padding:10px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+button{
+padding:12px;
+background:#4f46e5;
+color:white;
+border:none;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#4338ca;
+}
+
+.message{
+text-align:center;
+margin-top:10px;
+}
+
+.success{color:green;}
+.error{color:red;}
+
+#dashboard{
+display:none;
+}
+
+.verse{
+font-size:18px;
+font-style:italic;
+text-align:center;
+margin:20px 0;
+}
+
+.profile{
+background:#f1f5f9;
+padding:15px;
+border-radius:8px;
+}
+
+.logout{
+margin-top:15px;
+background:#ef4444;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="auth" class="card">
+
+<h1>Bible Encourager</h1>
+
+<div class="tabs">
+<div class="tab active" onclick="showForm('login')">Login</div>
+<div class="tab" onclick="showForm('register')">Register</div>
+</div>
+
+<form id="loginForm">
+
+<input type="email" id="loginEmail" placeholder="Email" required>
+
+<input type="password" id="loginPass" placeholder="Password" required>
+
+<button type="submit">Login</button>
+
+</form>
+
+<form id="registerForm" style="display:none">
+
+<input type="text" id="regName" placeholder="Full Name" required>
+
+<input type="email" id="regEmail" placeholder="Email" required>
+
+<input type="password" id="regPass" placeholder="Password" required>
+
+<button type="submit">Create Account</button>
+
+</form>
+
+<div id="msg" class="message"></div>
+
+</div>
+
+<div id="dashboard" class="card">
+
+<h1 id="greeting">Welcome</h1>
+
+<div class="verse" id="dailyVerse"></div>
+
+<div class="profile">
+
+<b>Name:</b> <span id="userName"></span><br><br> <b>Email:</b> <span id="userEmail"></span>
+
+</div>
+
+<button class="logout" onclick="logout()">Logout</button>
+
+</div>
+
+</div>
+
+<script>
+
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyf3MYGz1-YSx3BjGg2o3NAgKAOIMRFgBAt_hE3eOWZk3DW4hejhelZ7FAIAZUTzp4cTQ/exec";
+
+const verses=[
+"The Lord is my shepherd; I shall not want. - Psalm 23:1",
+"Be strong and courageous. - Joshua 1:9",
+"For I know the plans I have for you. - Jeremiah 29:11",
+"Come to me, all who are weary. - Matthew 11:28",
+"Peace I leave with you. - John 14:27"
+];
+
+function showForm(type){
+
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+
+if(type==="login"){
+document.querySelectorAll(".tab")[0].classList.add("active");
+document.getElementById("loginForm").style.display="flex";
+document.getElementById("registerForm").style.display="none";
+}else{
+document.querySelectorAll(".tab")[1].classList.add("active");
+document.getElementById("loginForm").style.display="none";
+document.getElementById("registerForm").style.display="flex";
+}
+
+}
+
+function showMessage(text,success=false){
+
+const msg=document.getElementById("msg");
+
+msg.innerText=text;
+
+msg.className="message "+(success?"success":"error");
+
+}
+
+function randomVerse(){
+
+const verse=verses[Math.floor(Math.random()*verses.length)];
+
+document.getElementById("dailyVerse").innerText=verse;
+
+}
+
+function greeting(){
+
+const h=new Date().getHours();
+
+let g="Welcome";
+
+if(h<12)g="Good Morning";
+else if(h<18)g="Good Afternoon";
+else g="Good Evening";
+
+document.getElementById("greeting").innerText=g;
+
+}
+
+function loadDashboard(){
+
+const user=JSON.parse(localStorage.getItem("bibleUser"));
+
+if(!user)return;
+
+document.getElementById("auth").style.display="none";
+document.getElementById("dashboard").style.display="block";
+
+document.getElementById("userName").innerText=user.name;
+document.getElementById("userEmail").innerText=user.email;
+
+greeting();
+randomVerse();
+
+}
+
+function logout(){
+
+localStorage.removeItem("bibleUser");
+
+document.getElementById("dashboard").style.display="none";
+document.getElementById("auth").style.display="block";
+
+}
+
+document.getElementById("loginForm").addEventListener("submit",async e=>{
+
+e.preventDefault();
+
+const email=document.getElementById("loginEmail").value;
+const password=document.getElementById("loginPass").value;
+
+const data=new FormData();
+
+data.append("action","login");
+data.append("email",email);
+data.append("password",password);
+
+try{
+
+const res=await fetch(SCRIPT_URL,{method:"POST",body:data});
+
+const result=await res.json();
+
+if(result.success){
+
+localStorage.setItem("bibleUser",JSON.stringify({
+name:result.name,
+email:result.email
+}));
+
+loadDashboard();
+
+}else{
+
+showMessage(result.message);
+
+}
+
+}catch{
+
+showMessage("Network error");
+
+}
+
+});
+
+document.getElementById("registerForm").addEventListener("submit",async e=>{
+
+e.preventDefault();
+
+const name=document.getElementById("regName").value;
+const email=document.getElementById("regEmail").value;
+const password=document.getElementById("regPass").value;
+
+const data=new FormData();
+
+data.append("action","register");
+data.append("name",name);
+data.append("email",email);
+data.append("password",password);
+
+try{
+
+const res=await fetch(SCRIPT_URL,{method:"POST",body:data});
+
+const result=await res.json();
+
+showMessage(result.message,result.success);
+
+}catch{
+
+showMessage("Network error");
+
+}
+
+});
+
+window.onload=()=>{
+
+if(localStorage.getItem("bibleUser")){
+loadDashboard();
+}
+
+};
+
+</script>
+
+</body>
+</html>
