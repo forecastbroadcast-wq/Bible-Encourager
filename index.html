@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bible Encourager</title>
 <style>
-/* Reset & Body */
 body{
   font-family:Arial, Helvetica, sans-serif;
   background:#eef2ff;
@@ -16,13 +15,14 @@ body{
 .main-wrapper{
   display:flex;
   flex-direction:column;
-  align-items:center;
-  width:100%;
   max-width:1200px;
+  width:100%;
   padding:20px;
   gap:20px;
+  align-items:center;
 }
-/* Hero / Landing Section */
+
+/* Hero / Entrance Section */
 .hero{
   width:100%;
   max-width:500px;
@@ -33,22 +33,41 @@ body{
   border-radius:15px;
   box-shadow:0 8px 20px rgba(0,0,0,0.1);
   margin-bottom:20px;
+  position:relative;
 }
-.hero h1{
-  font-size:2rem;
-  margin-bottom:10px;
+
+/* Semi-transparent overlay for better text readability */
+.hero::before{
+  content:"";
+  position:absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.3);
+  border-radius:15px;
+  z-index:0;
 }
-.hero p{
-  font-size:1rem;
-  line-height:1.5;
-  margin-bottom:10px;
+
+/* Text on top of overlay */
+.hero h1, .hero p, .hero span{
+  position:relative;
+  z-index:1;
+  text-shadow:1px 1px 3px rgba(0,0,0,0.6);
 }
-.hero span{
-  font-size:0.9rem;
-  opacity:0.9;
+
+.hero h1{ font-size:2rem; margin-bottom:10px; }
+.hero p{ font-size:1rem; line-height:1.5; margin-bottom:10px; }
+.hero span{ font-size:0.9rem; opacity:0.8; }
+
+/* Container for login/register and dashboard */
+.container{
+  width:100%;
+  max-width:450px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
 }
-/* Container */
-.container{ width:100%; max-width:450px; }
+
 /* Card */
 .card{
   background:white;
@@ -86,36 +105,25 @@ button:hover{background:#4338ca; transform: translateY(-1px);}
   padding:15px;
   border-radius:10px;
   box-shadow:0 4px 10px rgba(0,0,0,0.05);
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.profile img{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  object-fit:cover;
-  background:#4f46e5;
-  color:white;
-  font-weight:bold;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:1rem;
 }
 .logout{margin-top:15px; background:#ef4444;}
 .logout:hover{background:#b91c1c;}
-/* Video */
+
+/* Video Section (below login/register) */
+.video-container{
+  width:100%;
+  max-width:500px;
+}
 video.intro-video{
   width:100%;
   border-radius:15px;
   margin-top:20px;
-  max-height:500px;
   object-fit:contain;
 }
+
 /* Responsive */
 @media(max-width:800px){
-  .hero, .container, video.intro-video{width:100%;}
+  .main-wrapper, .container{ width:100%; }
 }
 </style>
 </head>
@@ -123,7 +131,7 @@ video.intro-video{
 
 <div class="main-wrapper">
 
-  <!-- Landing Hero Section -->
+  <!-- Hero Section -->
   <div class="hero">
     <h1>Welcome to Bible Encourager</h1>
     <p>Get your daily dose of encouragement from the Word of God. Login or register to receive uplifting verses, inspiring messages, and stay spiritually motivated every day.</p>
@@ -131,7 +139,6 @@ video.intro-video{
   </div>
 
   <div class="container">
-
     <!-- Login/Register Card -->
     <div id="auth" class="card">
       <h1>Bible Encourager</h1>
@@ -156,27 +163,23 @@ video.intro-video{
     <!-- Dashboard Card -->
     <div id="dashboard" class="card">
       <h1 id="greeting">Welcome</h1>
-
-      <div class="profile">
-        <img id="userIcon" src="" alt="Profile">
-        <div>
-          <b>Name:</b> <span id="userName"></span><br>
-          <b>Email:</b> <span id="userEmail"></span>
-        </div>
-      </div>
-
       <div class="verse-card" id="dailyVerse">Loading daily encouragement...</div>
-
-      <!-- Video appears after login -->
-      <video class="intro-video" autoplay loop playsinline controls>
-        <source src="assets/intro.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-
+      <div class="profile">
+        <b>Name:</b> <span id="userName"></span><br><br>
+        <b>Email:</b> <span id="userEmail"></span>
+      </div>
       <button class="logout" onclick="logout()">Logout</button>
     </div>
 
+    <!-- Video Section (after login/register) -->
+    <div class="video-container">
+      <video class="intro-video" autoplay loop playsinline>
+        <source src="assets/intro.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
   </div>
+
 </div>
 
 <script>
@@ -192,7 +195,6 @@ const verses=[
 "Cast all your anxiety on him because he cares for you. - 1 Peter 5:7"
 ];
 
-// Show login/register forms
 function showForm(type){
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.querySelectorAll(".tab")[type==="login"?0:1].classList.add("active");
@@ -201,14 +203,12 @@ function showForm(type){
   document.getElementById("msg").innerText="";
 }
 
-// Show message
 function showMessage(text,success=false){
   const msg=document.getElementById("msg");
   msg.innerText=text;
   msg.className="message "+(success?"success":"error");
 }
 
-// Random verse
 function randomVerse(){
   const verseBox = document.getElementById("dailyVerse");
   verseBox.style.opacity=0;
@@ -218,7 +218,6 @@ function randomVerse(){
   },500);
 }
 
-// Greeting
 function greeting(){
   const h=new Date().getHours();
   let g="Welcome";
@@ -229,7 +228,6 @@ function greeting(){
   document.getElementById("greeting").innerText = g + (user?`, ${user.name}!`:'!');
 }
 
-// Load dashboard after login
 function loadDashboard(){
   const user=JSON.parse(localStorage.getItem("bibleUser"));
   if(!user)return;
@@ -237,25 +235,17 @@ function loadDashboard(){
   document.getElementById("dashboard").style.display="block";
   document.getElementById("userName").innerText=user.name;
   document.getElementById("userEmail").innerText=user.email;
-
-  // Set profile icon initials
-  const icon = document.getElementById("userIcon");
-  icon.src = '';
-  icon.alt = user.name.charAt(0).toUpperCase();
-
   greeting();
   randomVerse();
   setInterval(randomVerse,10000);
 }
 
-// Logout
 function logout(){
   localStorage.removeItem("bibleUser");
   document.getElementById("dashboard").style.display="none";
   document.getElementById("auth").style.display="block";
 }
 
-// Login submit
 document.getElementById("loginForm").addEventListener("submit",async e=>{
   e.preventDefault();
   const email=document.getElementById("loginEmail").value;
@@ -274,7 +264,6 @@ document.getElementById("loginForm").addEventListener("submit",async e=>{
   }catch{showMessage("Network error");}
 });
 
-// Register submit
 document.getElementById("registerForm").addEventListener("submit",async e=>{
   e.preventDefault();
   const name=document.getElementById("regName").value;
@@ -297,8 +286,8 @@ document.getElementById("registerForm").addEventListener("submit",async e=>{
   }catch{showMessage("Network error");}
 });
 
-// Auto-login
 window.onload=()=>{if(localStorage.getItem("bibleUser")) loadDashboard();};
 </script>
+
 </body>
 </html>
