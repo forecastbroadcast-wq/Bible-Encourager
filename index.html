@@ -42,7 +42,6 @@ body{
   font-size:0.9rem;
   opacity:0.8;
 }
-
 .container{
   width:100%;
   max-width:450px;
@@ -98,9 +97,20 @@ button:hover{background:#4338ca; transform: translateY(-1px);}
   margin-top:15px; background:#ef4444;
 }
 .logout:hover{background:#b91c1c;}
+video.intro-video{
+  width:100%;
+  border-radius:15px;
+  margin-bottom:20px;
+}
 </style>
 </head>
 <body>
+
+<!-- Video Section -->
+<video class="intro-video" autoplay muted loop playsinline>
+  <source src="assets/intro.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 <!-- Hero / Entrance Section -->
 <div class="hero">
@@ -154,7 +164,6 @@ button:hover{background:#4338ca; transform: translateY(-1px);}
 <script>
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbz9Ama5D2gqTYtA1ZnrVuVwENIkjO-6A9Ri9TjHwqMEIN7rt6zTDb_CsmEawfYmunkeBA/exec";
 
-// Multiple verses
 const verses=[
 "The Lord is my shepherd; I shall not want. - Psalm 23:1",
 "Be strong and courageous. - Joshua 1:9",
@@ -165,7 +174,6 @@ const verses=[
 "Cast all your anxiety on him because he cares for you. - 1 Peter 5:7"
 ];
 
-// Show Login/Register Form
 function showForm(type){
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.querySelectorAll(".tab")[type==="login"?0:1].classList.add("active");
@@ -174,14 +182,12 @@ function showForm(type){
   document.getElementById("msg").innerText="";
 }
 
-// Show message
 function showMessage(text,success=false){
   const msg=document.getElementById("msg");
   msg.innerText=text;
   msg.className="message "+(success?"success":"error");
 }
 
-// Random verse with fade effect
 function randomVerse(){
   const verseBox = document.getElementById("dailyVerse");
   verseBox.style.opacity=0;
@@ -191,7 +197,6 @@ function randomVerse(){
   },500);
 }
 
-// Greeting
 function greeting(){
   const h=new Date().getHours();
   let g="Welcome";
@@ -202,7 +207,6 @@ function greeting(){
   document.getElementById("greeting").innerText = g + (user?`, ${user.name}!`:'!');
 }
 
-// Load Dashboard
 function loadDashboard(){
   const user=JSON.parse(localStorage.getItem("bibleUser"));
   if(!user)return;
@@ -212,17 +216,15 @@ function loadDashboard(){
   document.getElementById("userEmail").innerText=user.email;
   greeting();
   randomVerse();
-  setInterval(randomVerse,10000); // Change verse every 10 seconds
+  setInterval(randomVerse,10000);
 }
 
-// Logout
 function logout(){
   localStorage.removeItem("bibleUser");
   document.getElementById("dashboard").style.display="none";
   document.getElementById("auth").style.display="block";
 }
 
-// Login
 document.getElementById("loginForm").addEventListener("submit",async e=>{
   e.preventDefault();
   const email=document.getElementById("loginEmail").value;
@@ -241,7 +243,6 @@ document.getElementById("loginForm").addEventListener("submit",async e=>{
   }catch{showMessage("Network error");}
 });
 
-// Register
 document.getElementById("registerForm").addEventListener("submit",async e=>{
   e.preventDefault();
   const name=document.getElementById("regName").value;
@@ -264,7 +265,6 @@ document.getElementById("registerForm").addEventListener("submit",async e=>{
   }catch{showMessage("Network error");}
 });
 
-// Auto-login if user exists
 window.onload=()=>{if(localStorage.getItem("bibleUser")) loadDashboard();};
 </script>
 </body>
