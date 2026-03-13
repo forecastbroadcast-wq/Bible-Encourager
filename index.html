@@ -9,14 +9,44 @@ body{
   font-family:Arial, Helvetica, sans-serif;
   background:#eef2ff;
   display:flex;
-  justify-content:center;
+  flex-direction:column;
   align-items:center;
   min-height:100vh;
   margin:0;
 }
+.hero{
+  width:100%;
+  min-height:200px;
+  background:linear-gradient(135deg,#4f46e5,#9333ea);
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:30px;
+  text-align:center;
+  border-bottom-left-radius:30px;
+  border-bottom-right-radius:30px;
+}
+.hero h1{
+  font-size:2rem;
+  margin-bottom:10px;
+}
+.hero p{
+  font-size:1rem;
+  max-width:400px;
+  line-height:1.5;
+  margin-bottom:20px;
+}
+.hero span{
+  font-size:0.9rem;
+  opacity:0.8;
+}
+
 .container{
   width:100%;
   max-width:450px;
+  margin-top:-50px; /* overlap hero */
 }
 .card{
   background:white;
@@ -71,6 +101,14 @@ button:hover{background:#4338ca; transform: translateY(-1px);}
 </style>
 </head>
 <body>
+
+<!-- Hero / Entrance Section -->
+<div class="hero">
+  <h1>Welcome to Bible Encourager</h1>
+  <p>Get your daily dose of encouragement from the Word of God. Login or register to receive uplifting verses, inspiring messages, and stay spiritually motivated every day.</p>
+  <span>Sign in to start your journey of daily inspiration 🌟</span>
+</div>
+
 <div class="container">
 
 <!-- Login/Register Card -->
@@ -231,4 +269,3 @@ window.onload=()=>{if(localStorage.getItem("bibleUser")) loadDashboard();};
 </script>
 </body>
 </html>
-
