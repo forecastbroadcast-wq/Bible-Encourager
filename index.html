@@ -31,12 +31,14 @@ body{
 .hero h1{
   font-size:2rem;
   margin-bottom:10px;
+  text-shadow:0 3px 10px rgba(0,0,0,0.35);
 }
 .hero p{
   font-size:1rem;
   max-width:400px;
   line-height:1.5;
   margin-bottom:20px;
+  text-shadow:0 2px 8px rgba(0,0,0,0.25);
 }
 .hero span{
   font-size:0.9rem;
@@ -56,7 +58,7 @@ body{
   transition: transform 0.3s;
 }
 .card:hover{transform: translateY(-3px);}
-h1{text-align:center; color:#4f46e5;}
+.card h1{text-align:center; color:#4f46e5;}
 .tabs{display:flex; margin-bottom:20px; border-bottom:2px solid #ddd;}
 .tab{
   flex:1; text-align:center; padding:10px; cursor:pointer; transition: all 0.2s;
@@ -98,6 +100,12 @@ button:hover{background:#4338ca; transform: translateY(-1px);}
   margin-top:15px; background:#ef4444;
 }
 .logout:hover{background:#b91c1c;}
+video{
+  width:100%;
+  border-radius:10px;
+  margin-top:15px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+}
 </style>
 </head>
 <body>
@@ -146,13 +154,15 @@ button:hover{background:#4338ca; transform: translateY(-1px);}
 <b>Email:</b> <span id="userEmail"></span>
 </div>
 
-<a href="https://abeogeto.github.io/DanielLBC/" target="_blank">
-<button style="margin-top:15px;">Explore Daniel 2 And Understand</button>
-</a>
-
 <button class="logout" onclick="logout()">Logout</button>
-</div>
 
+<!-- Video at the bottom -->
+<video controls>
+  <source src="assets/intro.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+</div>
 </div>
 
 <script>
